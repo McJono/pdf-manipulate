@@ -143,19 +143,27 @@ class MainWindow:
         )
 
     def _show_merge(self) -> None:
-        """Show merge interface (placeholder)"""
-        if not self.selected_files:
-            messagebox.showwarning(
-                "No Files",
-                "Please select PDF files first using 'Open PDF Files'"
+        """Show merge interface"""
+        try:
+            from .merge_screen import show_merge_screen
+            
+            # Create new window for merge screen
+            merge_window = tk.Toplevel(self.root)
+            merge_window.title("PDF Merge")
+            merge_window.geometry("1200x700")
+            
+            # Show merge screen
+            show_merge_screen(merge_window)
+            
+        except ImportError as e:
+            messagebox.showerror(
+                "Missing Dependencies",
+                f"Merge functionality requires additional dependencies:\n\n{e}\n\n"
+                "Install with: pip install -r requirements.txt"
             )
-            return
-
-        messagebox.showinfo(
-            "Merge PDFs",
-            f"Merge feature coming soon!\n\n"
-            f"Selected {len(self.selected_files)} file(s) to merge."
-        )
+        except Exception as e:
+            logger.error(f"Error showing merge screen: {e}")
+            messagebox.showerror("Error", f"Failed to open merge screen:\n{str(e)}")
 
     def _show_batch_process(self) -> None:
         """Show batch processing interface (placeholder)"""

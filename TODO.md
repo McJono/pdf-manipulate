@@ -109,40 +109,40 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 ## 4. File Merging with Preview
 
 ### 4.1 File Selection Interface
-- [ ] Create file browser/selector
-- [ ] Display all available PDF files in directory
+- [x] Create file browser/selector
+- [x] Display all available PDF files in directory
 - [ ] Add drag-and-drop support for adding files
-- [ ] Implement multi-file selection
-- [ ] Show file metadata (name, size, page count, date)
+- [x] Implement multi-file selection
+- [x] Show file metadata (name, size, page count, date)
 
 ### 4.2 Preview System
-- [ ] Generate thumbnail previews for PDF pages
+- [x] Generate thumbnail previews for PDF pages
   - First page as default thumbnail
   - Option to show all pages
-- [ ] Implement double-click to open full preview
-- [ ] Create full-page preview modal/window
+- [x] Implement double-click to open full preview
+- [x] Create full-page preview modal/window
   - Navigation between pages
-  - Zoom in/out controls
+  - [ ] Zoom in/out controls
   - Page counter
-- [ ] Add caching for faster preview loading
-- [ ] Handle large files efficiently (lazy loading)
+- [x] Add caching for faster preview loading
+- [x] Handle large files efficiently (lazy loading)
 
 ### 4.3 Merge Selection & Ordering
-- [ ] Design click-to-select interface
-- [ ] Implement selection order tracking
+- [x] Design click-to-select interface
+- [x] Implement selection order tracking
   - Visual indicators (numbers, highlights)
   - Order can be modified by user
-- [ ] Add configuration option for merge mode:
+- [x] Add configuration option for merge mode:
   - "Click order" - merge in order of clicking
   - "Manual reorder" - allow drag-and-drop reordering after selection
-- [ ] Create visual merge queue/list
-- [ ] Add "Clear Selection" and "Remove Item" options
-- [ ] Implement drag-and-drop reordering in merge queue
+- [x] Create visual merge queue/list
+- [x] Add "Clear Selection" and "Remove Item" options
+- [x] Implement drag-and-drop reordering in merge queue
 
 ### 4.4 Merge Execution
-- [ ] Create "Merge Selected" button
+- [x] Create "Merge Selected" button
 - [ ] Show preview of merge result before final save
-- [ ] Implement merge operation with progress indicator
+- [x] Implement merge operation with progress indicator
 - [ ] Add option to delete source files after successful merge
 - [ ] Generate merge log/history
 
