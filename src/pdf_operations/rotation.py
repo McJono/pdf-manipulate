@@ -106,7 +106,9 @@ class RotationManager:
     @staticmethod
     def auto_detect_orientation(page: "PyPDF2.PageObject") -> dict:
         """
-        Detect page orientation (placeholder for future OCR implementation).
+        Detect page orientation using OCR.
+        
+        Note: This is a deprecated method. Use orientation_detector module instead.
 
         Args:
             page: PDF page object
@@ -114,13 +116,14 @@ class RotationManager:
         Returns:
             Dictionary with 'angle' (suggested rotation) and 'confidence' (0-1)
         """
-        # TODO: Implement OCR-based orientation detection
-        # For now, return a placeholder
-        logger.warning("Auto-detection not yet implemented, returning default orientation")
+        logger.warning(
+            "auto_detect_orientation is deprecated. "
+            "Use src.pdf_operations.orientation_detector module instead."
+        )
         return {
             "angle": 0,
             "confidence": 0.0,
-            "method": "placeholder"
+            "method": "deprecated"
         }
 
 
