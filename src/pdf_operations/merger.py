@@ -4,8 +4,23 @@ PDF merging functionality
 
 from pathlib import Path
 from typing import List, Union
-import PyPDF2
+
+try:
+    import PyPDF2
+    PYPDF2_AVAILABLE = True
+except ImportError:
+    PYPDF2_AVAILABLE = False
+
 from ..utils.logger import logger
+
+
+def _require_pypdf2():
+    """Raise error if PyPDF2 is not available"""
+    if not PYPDF2_AVAILABLE:
+        raise ImportError(
+            "PyPDF2 is required for PDF merging.\n"
+            "Install it with: pip install -r requirements.txt"
+        )
 
 
 class PDFMerger:
@@ -18,7 +33,12 @@ class PDFMerger:
         Args:
             preserve_metadata: Whether to preserve metadata from first PDF
             preserve_bookmarks: Whether to preserve bookmarks when merging
+            
+        Raises:
+            ImportError: If PyPDF2 is not installed
         """
+        _require_pypdf2()
+        
         self.preserve_metadata = preserve_metadata
         self.preserve_bookmarks = preserve_bookmarks
         self.merger = PyPDF2.PdfMerger()

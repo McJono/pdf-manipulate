@@ -4,8 +4,23 @@ PDF rotation functionality
 
 from pathlib import Path
 from typing import List, Optional, Union
-import PyPDF2
+
+try:
+    import PyPDF2
+    PYPDF2_AVAILABLE = True
+except ImportError:
+    PYPDF2_AVAILABLE = False
+
 from ..utils.logger import logger
+
+
+def _require_pypdf2():
+    """Raise error if PyPDF2 is not available"""
+    if not PYPDF2_AVAILABLE:
+        raise ImportError(
+            "PyPDF2 is required for PDF rotation.\n"
+            "Install it with: pip install -r requirements.txt"
+        )
 
 
 class RotationManager:
@@ -15,8 +30,8 @@ class RotationManager:
 
     @staticmethod
     def rotate_page(
-        page: PyPDF2.PageObject, angle: int
-    ) -> PyPDF2.PageObject:
+        page: "PyPDF2.PageObject", angle: int
+    ) -> "PyPDF2.PageObject":
         """
         Rotate a PDF page.
 
@@ -28,8 +43,11 @@ class RotationManager:
             Rotated page object
 
         Raises:
+            ImportError: If PyPDF2 is not installed
             ValueError: If angle is not valid
         """
+        _require_pypdf2()
+        
         if angle not in RotationManager.VALID_ANGLES:
             raise ValueError(f"Invalid rotation angle: {angle}. Must be one of {RotationManager.VALID_ANGLES}")
 
@@ -58,7 +76,12 @@ class RotationManager:
 
         Returns:
             True if successful, False otherwise
+            
+        Raises:
+            ImportError: If PyPDF2 is not installed
         """
+        _require_pypdf2()
+        
         try:
             reader = PyPDF2.PdfReader(str(input_path))
             writer = PyPDF2.PdfWriter()
@@ -81,7 +104,7 @@ class RotationManager:
             return False
 
     @staticmethod
-    def auto_detect_orientation(page: PyPDF2.PageObject) -> dict:
+    def auto_detect_orientation(page: "PyPDF2.PageObject") -> dict:
         """
         Detect page orientation (placeholder for future OCR implementation).
 
@@ -101,7 +124,7 @@ class RotationManager:
         }
 
 
-def rotate_left(page: PyPDF2.PageObject) -> PyPDF2.PageObject:
+def rotate_left(page: "PyPDF2.PageObject") -> "PyPDF2.PageObject":
     """
     Rotate page 90 degrees counter-clockwise.
 
@@ -110,11 +133,14 @@ def rotate_left(page: PyPDF2.PageObject) -> PyPDF2.PageObject:
 
     Returns:
         Rotated page object
+        
+    Raises:
+        ImportError: If PyPDF2 is not installed
     """
     return RotationManager.rotate_page(page, 270)
 
 
-def rotate_right(page: PyPDF2.PageObject) -> PyPDF2.PageObject:
+def rotate_right(page: "PyPDF2.PageObject") -> "PyPDF2.PageObject":
     """
     Rotate page 90 degrees clockwise.
 
@@ -123,11 +149,14 @@ def rotate_right(page: PyPDF2.PageObject) -> PyPDF2.PageObject:
 
     Returns:
         Rotated page object
+        
+    Raises:
+        ImportError: If PyPDF2 is not installed
     """
     return RotationManager.rotate_page(page, 90)
 
 
-def rotate_180(page: PyPDF2.PageObject) -> PyPDF2.PageObject:
+def rotate_180(page: "PyPDF2.PageObject") -> "PyPDF2.PageObject":
     """
     Rotate page 180 degrees.
 
@@ -136,5 +165,8 @@ def rotate_180(page: PyPDF2.PageObject) -> PyPDF2.PageObject:
 
     Returns:
         Rotated page object
+        
+    Raises:
+        ImportError: If PyPDF2 is not installed
     """
     return RotationManager.rotate_page(page, 180)

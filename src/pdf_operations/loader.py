@@ -4,9 +4,24 @@ PDF loading and validation functionality
 
 from pathlib import Path
 from typing import Dict, List, Optional, Union
-import PyPDF2
+
+try:
+    import PyPDF2
+    PYPDF2_AVAILABLE = True
+except ImportError:
+    PYPDF2_AVAILABLE = False
+    
 from ..utils.logger import logger
 from ..utils.validators import is_valid_pdf
+
+
+def _require_pypdf2():
+    """Raise error if PyPDF2 is not available"""
+    if not PYPDF2_AVAILABLE:
+        raise ImportError(
+            "PyPDF2 is required for PDF operations.\n"
+            "Install it with: pip install -r requirements.txt"
+        )
 
 
 class PDFDocument:
@@ -20,9 +35,12 @@ class PDFDocument:
             file_path: Path to PDF file
 
         Raises:
+            ImportError: If PyPDF2 is not installed
             FileNotFoundError: If file doesn't exist
             ValueError: If file is not a valid PDF
         """
+        _require_pypdf2()
+        
         self.file_path = Path(file_path)
 
         if not self.file_path.exists():

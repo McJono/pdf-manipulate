@@ -108,9 +108,10 @@ def check_disk_space(directory: Union[str, Path], required_mb: int) -> bool:
         True if enough space, False otherwise
     """
     try:
-        stat = os.statvfs(str(directory))
+        import shutil
+        stat = shutil.disk_usage(str(directory))
         # Available space in MB
-        available_mb = (stat.f_bavail * stat.f_frsize) / (1024 * 1024)
+        available_mb = stat.free / (1024 * 1024)
         return available_mb >= required_mb
     except Exception:
         # If we can't check, assume there's space
