@@ -1,0 +1,66 @@
+{
+  "auto_rotation": {
+    "enabled": true,
+    "confidence_threshold": 0.8,
+    "ocr_language": "eng",
+    "batch_processing": {
+      "max_concurrent": 3,
+      "show_progress": true
+    }
+  },
+  "merge": {
+    "selection_mode": "click_order",
+    "preserve_bookmarks": true,
+    "preserve_metadata": true,
+    "delete_source_after_merge": false
+  },
+  "naming": {
+    "templates": [
+      "{date+7}_{name}",
+      "{name}_{date}",
+      "Invoice_{date}_{name}",
+      "Receipt_{date+7}_{name}",
+      "Contract_{name}_{date}",
+      "{filename}_{timestamp}"
+    ],
+    "date_format": "YYYY-MM-DD",
+    "default_template": "{date+7}_{name}",
+    "prompt_for_name": true,
+    "sanitize_filenames": true,
+    "max_filename_length": 255
+  },
+  "preview": {
+    "thumbnail_size": 200,
+    "quality": "medium",
+    "cache_enabled": true,
+    "cache_size_mb": 100
+  },
+  "ui": {
+    "theme": "light",
+    "window_size": {
+      "width": 1200,
+      "height": 800
+    },
+    "remember_window_position": true,
+    "show_tooltips": true,
+    "keyboard_shortcuts_enabled": true
+  },
+  "file_operations": {
+    "backup_originals": true,
+    "backup_directory": "./backups",
+    "compression_level": "medium",
+    "validate_pdfs": true
+  },
+  "logging": {
+    "enabled": true,
+    "level": "INFO",
+    "log_file": "pdf-manipulate.log",
+    "max_log_size_mb": 10,
+    "rotate_logs": true
+  },
+  "advanced": {
+    "max_file_size_mb": 500,
+    "memory_limit_mb": 2048,
+    "enable_gpu_acceleration": false
+  }
+}
