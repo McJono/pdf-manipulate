@@ -22,6 +22,9 @@ try:
 except ImportError:
     DEPENDENCIES_AVAILABLE = False
 
+from .naming_dialog import show_naming_dialog
+from ..config.manager import config
+
 logger = logging.getLogger(__name__)
 
 
@@ -640,43 +643,142 @@ class MergeScreen(ttk.Frame):
             messagebox.showwarning("Warning", "Select at least 2 files to merge")
             return
         
-        # Ask for output filename
-        output_file = filedialog.asksaveasfilename(
-            title="Save Merged PDF As",
-            defaultextension=".pdf",
-            filetypes=[("PDF files", "*.pdf"), ("All files", "*.*")]
-        )
+        # Generate default filename from first file
+        first_file = os.path.basename(self.merge_queue[0])
+        default_name = os.path.splitext(first_file)[0]
         
-        if not output_file:
-            return
-        
-        # Perform merge
-        try:
-            merger = PDFMerger()
+        # Show naming dialog
+        def save_callback(filename: str) -> bool:
+            """
+            Save callback for naming dialog.
             
-            # Add files in queue order
-            for file_path in self.merge_queue:
-                merger.add_pdf(file_path)
-            
-            # Merge
-            result = merger.merge(output_file)
-            
-            if result:
-                messagebox.showinfo(
-                    "Success",
-                    f"Successfully merged {len(self.merge_queue)} PDFs!\n\n"
-                    f"Output: {output_file}"
-                )
+            Args:
+                filename: The filename to save to
                 
-                # Ask if user wants to clear queue
-                if messagebox.askyesno("Clear Queue", "Clear the merge queue?"):
-                    self.merge_queue.clear()
-                    self._update_queue_display()
-            else:
-                messagebox.showerror("Error", "Merge operation failed")
+            Returns:
+                True if save succeeded, False otherwise
+            """
+            # Ensure .pdf extension
+            if not filename.lower().endswith('.pdf'):
+                filename += '.pdf'
+            
+            # Ask for save directory
+            output_dir = filedialog.askdirectory(
+                title="Select Output Directory",
+                mustexist=True
+            )
+            
+            if not output_dir:
+                return False
+            
+            output_file = os.path.join(output_dir, filename)
+            
+            # Check if file exists and confirm overwrite
+            if os.path.exists(output_file):
+                if not messagebox.askyesno(
+                    "Confirm Overwrite",
+                    f"File '{filename}' already exists.\n\nDo you want to overwrite it?"
+                ):
+                    return False
+            
+            # Perform merge
+            try:
+                merger = PDFMerger()
+                
+                # Add files in queue order
+                for file_path in self.merge_queue:
+                    merger.add_pdf(file_path)
+                
+                # Merge
+                result = merger.merge(output_file)
+                
+                if result:
+                    # Check if user wants to delete source files
+                    delete_sources = config.get("merge.delete_source_after_merge", False)
+                    if delete_sources:
+                        if messagebox.askyesno(
+                            "Delete Source Files",
+                            "Merge successful. Delete source files?"
+                        ):
+                            self._delete_source_files()
+                    
+                    # Log the merge operation
+                    self._log_merge_operation(output_file)
+                    
+                    messagebox.showinfo(
+                        "Success",
+                        f"Successfully merged {len(self.merge_queue)} PDFs!\n\n"
+                        f"Output: {output_file}"
+                    )
+                    
+                    # Ask if user wants to clear queue
+                    if messagebox.askyesno("Clear Queue", "Clear the merge queue?"):
+                        self.merge_queue.clear()
+                        self._update_queue_display()
+                    
+                    return True
+                else:
+                    messagebox.showerror("Error", "Merge operation failed")
+                    return False
+            except Exception as e:
+                logger.error(f"Merge failed: {e}")
+                messagebox.showerror("Error", f"Failed to merge PDFs:\n{str(e)}")
+                return False
+        
+        # Show naming dialog with callback
+        result = show_naming_dialog(
+            self,
+            title="Name Merged PDF",
+            default_filename=default_name,
+            on_save=save_callback
+        )
+    
+    def _delete_source_files(self) -> None:
+        """Delete source files after successful merge."""
+        deleted = 0
+        failed = []
+        
+        for file_path in self.merge_queue:
+            try:
+                os.remove(file_path)
+                deleted += 1
+                logger.info(f"Deleted source file: {file_path}")
+            except Exception as e:
+                logger.error(f"Failed to delete {file_path}: {e}")
+                failed.append(os.path.basename(file_path))
+        
+        if failed:
+            messagebox.showwarning(
+                "Deletion Warning",
+                f"Deleted {deleted} files.\n\n"
+                f"Failed to delete:\n" + "\n".join(failed)
+            )
+        else:
+            logger.info(f"Successfully deleted {deleted} source files")
+    
+    def _log_merge_operation(self, output_file: str) -> None:
+        """
+        Log merge operation to file.
+        
+        Args:
+            output_file: Path to merged output file
+        """
+        try:
+            log_file = "merge_history.log"
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            
+            with open(log_file, "a", encoding="utf-8") as f:
+                f.write(f"\n{'='*80}\n")
+                f.write(f"Merge Date: {timestamp}\n")
+                f.write(f"Output File: {output_file}\n")
+                f.write(f"Source Files ({len(self.merge_queue)}):\n")
+                for i, file_path in enumerate(self.merge_queue, 1):
+                    f.write(f"  {i}. {file_path}\n")
+                f.write(f"{'='*80}\n")
+            
+            logger.info(f"Logged merge operation to {log_file}")
         except Exception as e:
-            logger.error(f"Merge failed: {e}")
-            messagebox.showerror("Error", f"Failed to merge PDFs:\n{str(e)}")
+            logger.error(f"Failed to log merge operation: {e}")
 
 
 def show_merge_screen(parent=None):
