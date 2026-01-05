@@ -314,9 +314,23 @@ def create_blank_thumbnail(
     draw = ImageDraw.Draw(image)
     
     # Try to use a nice font, fallback to default
-    try:
-        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16)
-    except:
+    # Check common font paths across different platforms
+    font_paths = [
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",  # Linux
+        "/System/Library/Fonts/Helvetica.ttc",  # macOS
+        "C:\\Windows\\Fonts\\arial.ttf",  # Windows
+    ]
+    
+    font = None
+    for font_path in font_paths:
+        try:
+            font = ImageFont.truetype(font_path, 16)
+            break
+        except:
+            continue
+    
+    # Fallback to default font if none found
+    if font is None:
         font = ImageFont.load_default()
     
     # Calculate text position (centered)

@@ -18,7 +18,6 @@ try:
     from ..pdf_operations.preview import PDFPreviewGenerator, create_blank_thumbnail
     from ..pdf_operations.merger import PDFMerger
     from ..pdf_operations.loader import load_pdf
-    from ..naming.parser import TemplateParser
     DEPENDENCIES_AVAILABLE = True
 except ImportError:
     DEPENDENCIES_AVAILABLE = False
@@ -49,7 +48,7 @@ class PDFFileInfo:
                 doc = load_pdf(file_path)
                 self.page_count = doc.page_count
         except Exception as e:
-            logger.warning(f"Could not load page count for {file_path}: {e}")
+            logger.warning(f"Could not load page count for {file_path}: {type(e).__name__}: {e}")
     
     def format_size(self) -> str:
         """Format file size in human-readable form."""
@@ -594,8 +593,10 @@ class MergeScreen(ttk.Frame):
         selection = self.queue_listbox.curselection()
         if selection and selection[0] > 0:
             index = selection[0]
-            self.merge_queue[index], self.merge_queue[index - 1] = \
-                self.merge_queue[index - 1], self.merge_queue[index]
+            # Swap items
+            temp = self.merge_queue[index]
+            self.merge_queue[index] = self.merge_queue[index - 1]
+            self.merge_queue[index - 1] = temp
             self._update_queue_display()
             self.queue_listbox.selection_set(index - 1)
     
@@ -604,8 +605,10 @@ class MergeScreen(ttk.Frame):
         selection = self.queue_listbox.curselection()
         if selection and selection[0] < len(self.merge_queue) - 1:
             index = selection[0]
-            self.merge_queue[index], self.merge_queue[index + 1] = \
-                self.merge_queue[index + 1], self.merge_queue[index]
+            # Swap items
+            temp = self.merge_queue[index]
+            self.merge_queue[index] = self.merge_queue[index + 1]
+            self.merge_queue[index + 1] = temp
             self._update_queue_display()
             self.queue_listbox.selection_set(index + 1)
     
