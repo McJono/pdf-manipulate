@@ -1,0 +1,3 @@
+"""
+Naming Template System Module
+"""
