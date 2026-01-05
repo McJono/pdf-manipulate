@@ -34,6 +34,17 @@ This application streamlines PDF workflow management by providing:
 
 ## Quick Start
 
+For installation and setup instructions, see [INSTALL.md](INSTALL.md).
+
+Basic usage:
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the application
+python3 main.py
+```
+
 See [TODO.md](TODO.md) for the comprehensive development roadmap and implementation plan.
 
 ## Configuration Example
