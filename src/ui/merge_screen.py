@@ -17,7 +17,7 @@ from PIL import Image, ImageTk
 try:
     from ..pdf_operations.preview import PDFPreviewGenerator, create_blank_thumbnail
     from ..pdf_operations.merger import PDFMerger
-    from ..pdf_operations.loader import PDFLoader
+    from ..pdf_operations.loader import load_pdf
     from ..naming.parser import TemplateParser
     DEPENDENCIES_AVAILABLE = True
 except ImportError:
@@ -46,9 +46,8 @@ class PDFFileInfo:
         # Try to get page count
         try:
             if DEPENDENCIES_AVAILABLE:
-                loader = PDFLoader()
-                metadata = loader.get_metadata(file_path)
-                self.page_count = metadata.get('page_count', 0)
+                doc = load_pdf(file_path)
+                self.page_count = doc.page_count
         except Exception as e:
             logger.warning(f"Could not load page count for {file_path}: {e}")
     
@@ -87,9 +86,8 @@ class PreviewDialog(tk.Toplevel):
         
         # Get total pages
         try:
-            loader = PDFLoader()
-            metadata = loader.get_metadata(pdf_path)
-            self.total_pages = metadata.get('page_count', 1)
+            doc = load_pdf(pdf_path)
+            self.total_pages = doc.page_count
         except Exception as e:
             logger.error(f"Could not load PDF metadata: {e}")
             self.total_pages = 1
