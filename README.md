@@ -66,8 +66,11 @@ See [TODO.md](TODO.md) for the comprehensive development roadmap and implementat
 ## Documentation
 
 - [TODO.md](TODO.md) - Complete development roadmap and task breakdown
-- User Guide - (Coming soon)
-- Developer Documentation - (Coming soon)
+- [ROADMAP.md](docs/ROADMAP.md) - Development timeline and milestones
+- [USER_STORIES.md](docs/USER_STORIES.md) - User personas and feature requirements
+- [NAMING_TEMPLATES.md](docs/NAMING_TEMPLATES.md) - Naming template system reference
+- [GETTING_STARTED.md](docs/GETTING_STARTED.md) - Developer onboarding guide
+- [DELIVERABLES.md](docs/DELIVERABLES.md) - Project deliverables summary
 
 ## Technology Stack (Planned)
 
