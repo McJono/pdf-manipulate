@@ -5,10 +5,8 @@ This module uses Tesseract OCR to detect the orientation of PDF pages
 and suggest the correct rotation angle.
 """
 
-import io
 from pathlib import Path
 from typing import Dict, List, Optional, Union
-import tempfile
 
 try:
     import PyPDF2
@@ -70,16 +68,6 @@ class OrientationDetector:
     
     # Confidence threshold for automatic rotation
     DEFAULT_CONFIDENCE_THRESHOLD = 0.80
-    
-    # Mapping from Tesseract orientation codes to rotation angles
-    # Tesseract returns: 0=0°, 1=90°, 2=180°, 3=270° (clockwise)
-    # We need to rotate counter-clockwise, so we invert
-    ORIENTATION_TO_ROTATION = {
-        0: 0,    # Already correct
-        1: 270,  # Rotate 270° clockwise = 90° counter-clockwise
-        2: 180,  # Rotate 180°
-        3: 90,   # Rotate 90° clockwise = 270° counter-clockwise
-    }
     
     def __init__(self, confidence_threshold: float = DEFAULT_CONFIDENCE_THRESHOLD):
         """

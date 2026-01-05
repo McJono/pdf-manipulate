@@ -77,13 +77,14 @@ class TestOrientationDetector:
         assert summary['low_confidence'] == 1
         assert summary['pages_to_rotate'] == [1, 3]
     
-    def test_orientation_to_rotation_mapping(self):
-        """Test that orientation codes map to correct rotation angles"""
-        # Verify the mapping
-        assert OrientationDetector.ORIENTATION_TO_ROTATION[0] == 0
-        assert OrientationDetector.ORIENTATION_TO_ROTATION[1] == 270
-        assert OrientationDetector.ORIENTATION_TO_ROTATION[2] == 180
-        assert OrientationDetector.ORIENTATION_TO_ROTATION[3] == 90
+    def test_angle_validation(self):
+        """Test that detection results have valid angles"""
+        # Valid angles are 0, 90, 180, 270
+        valid_angles = [0, 90, 180, 270]
+        
+        # Test that default result has valid angle
+        result = OrientationDetector._create_default_result("test")
+        assert result['angle'] in valid_angles
     
     def test_create_default_result(self):
         """Test fallback result creation"""
