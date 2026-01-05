@@ -10,6 +10,7 @@ import logging
 
 from ..naming.parser import TemplateParser
 from ..config.manager import config
+from ..utils.validators import ensure_extension
 
 logger = logging.getLogger(__name__)
 
@@ -199,7 +200,7 @@ class NamingDialog(tk.Toplevel):
             if name:
                 user_vars["name"] = name
             
-            filename = self.default_filename or "file"
+            filename = self.default_filename or "merged_document"
             preview = self.parser.parse(
                 template,
                 user_variables=user_vars,
@@ -207,8 +208,7 @@ class NamingDialog(tk.Toplevel):
             )
             
             # Add .pdf extension if not present
-            if not preview.lower().endswith('.pdf'):
-                preview += '.pdf'
+            preview = ensure_extension(preview, ".pdf")
             
             self.preview_var.set(preview)
             self.validation_var.set("")

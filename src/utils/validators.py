@@ -116,3 +116,23 @@ def check_disk_space(directory: Union[str, Path], required_mb: int) -> bool:
     except Exception:
         # If we can't check, assume there's space
         return True
+
+
+def ensure_extension(filename: str, extension: str = ".pdf") -> str:
+    """
+    Ensure a filename has the specified extension.
+    
+    Args:
+        filename: The filename to check
+        extension: The extension to ensure (with leading dot)
+        
+    Returns:
+        Filename with extension
+    """
+    if not extension.startswith("."):
+        extension = "." + extension
+    
+    if not filename.lower().endswith(extension.lower()):
+        return filename + extension
+    
+    return filename

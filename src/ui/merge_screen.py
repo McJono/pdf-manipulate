@@ -24,6 +24,7 @@ except ImportError:
 
 from .naming_dialog import show_naming_dialog
 from ..config.manager import config
+from ..utils.validators import ensure_extension
 
 logger = logging.getLogger(__name__)
 
@@ -659,8 +660,7 @@ class MergeScreen(ttk.Frame):
                 True if save succeeded, False otherwise
             """
             # Ensure .pdf extension
-            if not filename.lower().endswith('.pdf'):
-                filename += '.pdf'
+            filename = ensure_extension(filename, ".pdf")
             
             # Ask for save directory
             output_dir = filedialog.askdirectory(
@@ -764,7 +764,13 @@ class MergeScreen(ttk.Frame):
             output_file: Path to merged output file
         """
         try:
-            log_file = "merge_history.log"
+            # Get log file location from config or use default
+            log_file = config.get("logging.merge_history_file", "merge_history.log")
+            
+            # If it's a relative path, put it in user's home directory
+            if not os.path.isabs(log_file):
+                log_file = os.path.join(os.path.expanduser("~"), log_file)
+            
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             
             with open(log_file, "a", encoding="utf-8") as f:
