@@ -44,6 +44,11 @@ class MainWindow:
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.root.quit)
 
+        # Edit menu
+        edit_menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Edit", menu=edit_menu)
+        edit_menu.add_command(label="Settings...", command=self._show_settings)
+
         # Tools menu
         tools_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Tools", menu=tools_menu)
@@ -171,6 +176,15 @@ class MainWindow:
             "Batch Process",
             "Batch processing feature coming soon!"
         )
+    
+    def _show_settings(self) -> None:
+        """Show settings/preferences dialog"""
+        try:
+            from .settings_dialog import show_settings_dialog
+            show_settings_dialog(self.root)
+        except Exception as e:
+            logger.error(f"Error showing settings dialog: {e}")
+            messagebox.showerror("Error", f"Failed to open settings dialog:\n{str(e)}")
 
     def _show_about(self) -> None:
         """Show about dialog"""

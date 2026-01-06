@@ -33,7 +33,7 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 - [x] Install PDF manipulation libraries
 - [x] Install image processing libraries (for previews)
 - [x] Install GUI framework
-- [ ] Set up linting/formatting tools (pylint, black, flake8, etc.)
+- [x] Set up linting/formatting tools (pylint, black, flake8, etc.)
 - [ ] Configure IDE/editor
 
 ---
@@ -229,7 +229,7 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 
 ### 6.3 Dialogs & Modals
 - [x] File picker dialog
-- [ ] Settings/preferences dialog
+- [x] Settings/preferences dialog
 - [x] Preview modal for double-click
 - [x] Error/warning dialogs
 - [x] Progress dialog for long operations
@@ -278,7 +278,7 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
   ```
 - [x] Implement config loader
 - [x] Create config validator
-- [ ] Add config editor UI
+- [x] Add config editor UI
 
 ### 7.2 Settings Persistence
 - [ ] Save user preferences
@@ -299,10 +299,10 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 - [x] Test config parsing
 
 ### 8.2 Integration Tests
-- [ ] Test complete auto-rotation workflow
-- [ ] Test merge workflow end-to-end
-- [ ] Test naming and saving workflow
-- [ ] Test error handling scenarios
+- [x] Test complete auto-rotation workflow
+- [x] Test merge workflow end-to-end
+- [x] Test naming and saving workflow
+- [x] Test error handling scenarios
 
 ### 8.3 User Acceptance Testing
 - [ ] Create test PDFs with various orientations
@@ -351,14 +351,14 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 - [x] Create user manual/guide
 - [x] Write quick start guide
 - [x] Document naming template syntax
-- [ ] Create FAQ section
-- [ ] Add troubleshooting guide
+- [x] Create FAQ section
+- [x] Add troubleshooting guide
 - [ ] Create video tutorials (optional)
 
 ### 10.2 Developer Documentation
 - [x] Document code architecture
 - [x] Create API documentation
-- [ ] Write contribution guidelines
+- [x] Write contribution guidelines
 - [ ] Document build/deployment process
 - [x] Create development setup guide
 
