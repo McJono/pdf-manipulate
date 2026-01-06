@@ -72,6 +72,11 @@ class PDFFileInfo:
 class PreviewDialog(tk.Toplevel):
     """Full-page preview dialog."""
     
+    # Zoom constants
+    MIN_ZOOM_LEVEL = 0.25  # 25%
+    MAX_ZOOM_LEVEL = 3.0   # 300%
+    ZOOM_STEP = 1.25       # 25% increment
+    
     def __init__(self, parent, pdf_path: str, page_number: int = 0):
         """
         Initialize preview dialog.
@@ -252,14 +257,14 @@ class PreviewDialog(tk.Toplevel):
     
     def _zoom_in(self):
         """Zoom in (increase size by 25%)."""
-        if self.zoom_level < 3.0:  # Max 300%
-            self.zoom_level *= 1.25
+        if self.zoom_level < self.MAX_ZOOM_LEVEL:
+            self.zoom_level *= self.ZOOM_STEP
             self._update_zoom()
     
     def _zoom_out(self):
         """Zoom out (decrease size by 25%)."""
-        if self.zoom_level > 0.25:  # Min 25%
-            self.zoom_level /= 1.25
+        if self.zoom_level > self.MIN_ZOOM_LEVEL:
+            self.zoom_level /= self.ZOOM_STEP
             self._update_zoom()
     
     def _zoom_reset(self):

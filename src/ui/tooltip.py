@@ -30,7 +30,7 @@ class ToolTip:
         self.text = text
         self.delay = delay
         self.tip_window: Optional[tk.Toplevel] = None
-        self.schedule_id: Optional[str] = None
+        self.schedule_id: Optional[int] = None
         
         # Bind events
         self.widget.bind("<Enter>", self._on_enter)
