@@ -45,6 +45,9 @@ class MainWindow:
         
         # Save window geometry on close
         self.root.protocol("WM_DELETE_WINDOW", self._on_closing)
+        
+        # Show getting started wizard on first run
+        self.root.after(500, self._show_getting_started_if_needed)
 
         logger.info("Main window initialized")
 
@@ -114,6 +117,9 @@ class MainWindow:
             label=f"Help{'':< 15}{help_shortcut:>10}",
             command=self._show_help
         )
+        help_menu.add_command(label="Getting Started...", command=self._show_getting_started)
+        help_menu.add_command(label="View Logs...", command=self._show_logs)
+        help_menu.add_separator()
         help_menu.add_command(label="About", command=self._show_about)
     
     def _create_toolbar(self) -> None:
@@ -455,6 +461,32 @@ https://github.com/McJono/pdf-manipulate
             command=help_window.destroy,
             width=15
         ).pack()
+    
+    def _show_logs(self) -> None:
+        """Show log viewer dialog"""
+        try:
+            from .log_viewer import show_log_viewer
+            show_log_viewer(self.root)
+        except Exception as e:
+            logger.error(f"Error showing log viewer: {e}")
+            messagebox.showerror("Error", f"Failed to open log viewer:\n{str(e)}")
+    
+    def _show_getting_started(self) -> None:
+        """Show getting started wizard"""
+        try:
+            from .getting_started import GettingStartedWizard
+            GettingStartedWizard(self.root)
+        except Exception as e:
+            logger.error(f"Error showing getting started wizard: {e}")
+            messagebox.showerror("Error", f"Failed to open getting started wizard:\n{str(e)}")
+    
+    def _show_getting_started_if_needed(self) -> None:
+        """Show getting started wizard if user hasn't disabled it"""
+        try:
+            from .getting_started import show_getting_started
+            show_getting_started(self.root)
+        except Exception as e:
+            logger.error(f"Error showing getting started wizard: {e}")
 
     def _show_about(self) -> None:
         """Show about dialog"""

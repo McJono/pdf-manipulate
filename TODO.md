@@ -334,7 +334,7 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 - [x] Log all file operations
 - [x] Log errors with stack traces
 - [x] Create rotating log files
-- [ ] Add log viewer in application
+- [x] Add log viewer in application
 
 ### 9.3 Validation
 - [x] Validate input files (are they PDFs?)
@@ -364,8 +364,8 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 
 ### 10.3 In-App Help
 - [x] Add help tooltips
-- [ ] Create contextual help system
-- [ ] Add "Getting Started" wizard
+- [x] Create contextual help system
+- [x] Add "Getting Started" wizard
 - [x] Include example templates
 
 ---
