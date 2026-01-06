@@ -143,16 +143,16 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 - [x] Create "Merge Selected" button
 - [ ] Show preview of merge result before final save
 - [x] Implement merge operation with progress indicator
-- [ ] Add option to delete source files after successful merge
-- [ ] Generate merge log/history
+- [x] Add option to delete source files after successful merge
+- [x] Generate merge log/history
 
 ---
 
 ## 5. Intelligent Naming System
 
 ### 5.1 Configuration System
-- [ ] Create config file format (JSON, YAML, or INI)
-- [ ] Define naming template syntax
+- [x] Create config file format (JSON, YAML, or INI)
+- [x] Define naming template syntax
   - `{date}` - current date
   - `{date+N}` - date plus N days (e.g., `{date+7}`)
   - `{date-N}` - date minus N days
@@ -160,37 +160,37 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
   - `{filename}` - original filename
   - `{counter}` - sequential counter
   - `{timestamp}` - full timestamp
-- [ ] Implement date formatting options
+- [x] Implement date formatting options
   - YYYY-MM-DD, DD-MM-YYYY, MM-DD-YYYY, etc.
   - Custom formats
-- [ ] Add config validation
+- [x] Add config validation
 
 ### 5.2 Naming Template Engine
-- [ ] Create template parser
-- [ ] Implement variable substitution
-- [ ] Add date arithmetic functionality (e.g., +7 days)
-- [ ] Create preview of generated filename
-- [ ] Handle invalid characters in filenames
-- [ ] Add filename sanitization
+- [x] Create template parser
+- [x] Implement variable substitution
+- [x] Add date arithmetic functionality (e.g., +7 days)
+- [x] Create preview of generated filename
+- [x] Handle invalid characters in filenames
+- [x] Add filename sanitization
 
 ### 5.3 User Prompts & Labels
-- [ ] Design prompt interface for name input
+- [x] Design prompt interface for name input
 - [ ] Create batch naming interface for multiple files
-- [ ] Add name validation (no conflicts, valid characters)
-- [ ] Implement filename suggestion system
+- [x] Add name validation (no conflicts, valid characters)
+- [x] Implement filename suggestion system
 - [ ] Add history/autocomplete for frequently used names
-- [ ] Create templates library for common naming patterns
+- [x] Create templates library for common naming patterns
   - Invoice: `Invoice_{date}_{name}.pdf`
   - Receipt: `Receipt_{date+7}_{name}.pdf`
   - Contract: `Contract_{name}_{date}.pdf`
 
 ### 5.4 File Saving
-- [ ] Implement save dialog with name preview
-- [ ] Add overwrite confirmation
-- [ ] Create "Save As" functionality
+- [x] Implement save dialog with name preview
+- [x] Add overwrite confirmation
+- [x] Create "Save As" functionality
 - [ ] Implement batch save with naming template
-- [ ] Add output directory selection
-- [ ] Generate save report/log
+- [x] Add output directory selection
+- [x] Generate save report/log
 
 ---
 

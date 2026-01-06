@@ -4,7 +4,7 @@ Tests for validator utilities
 
 import pytest
 from pathlib import Path
-from src.utils.validators import sanitize_filename, is_valid_pdf
+from src.utils.validators import sanitize_filename, is_valid_pdf, ensure_extension
 
 
 class TestSanitizeFilename:
@@ -91,3 +91,42 @@ class TestIsValidPDF:
             assert not is_valid_pdf(path)
         finally:
             path.unlink()
+
+
+class TestEnsureExtension:
+    """Test cases for ensure_extension"""
+
+    def test_adds_extension_when_missing(self):
+        """Test adding extension to filename without one"""
+        result = ensure_extension("document", ".pdf")
+        assert result == "document.pdf"
+
+    def test_preserves_existing_extension(self):
+        """Test preserving existing extension"""
+        result = ensure_extension("document.pdf", ".pdf")
+        assert result == "document.pdf"
+
+    def test_case_insensitive_check(self):
+        """Test case-insensitive extension check"""
+        result = ensure_extension("document.PDF", ".pdf")
+        assert result == "document.PDF"  # Preserves original case
+
+    def test_extension_without_dot(self):
+        """Test handling extension without leading dot"""
+        result = ensure_extension("document", "pdf")
+        assert result == "document.pdf"
+
+    def test_different_extensions(self):
+        """Test with non-PDF extensions"""
+        result = ensure_extension("image", ".jpg")
+        assert result == "image.jpg"
+
+    def test_multiple_dots_in_filename(self):
+        """Test filename with multiple dots"""
+        result = ensure_extension("my.document.backup", ".pdf")
+        assert result == "my.document.backup.pdf"
+
+    def test_empty_filename(self):
+        """Test empty filename"""
+        result = ensure_extension("", ".pdf")
+        assert result == ".pdf"

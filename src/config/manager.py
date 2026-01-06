@@ -61,6 +61,7 @@ class ConfigManager:
             "log_file": "pdf-manipulate.log",
             "max_log_size_mb": 10,
             "rotate_logs": True,
+            "merge_history_file": "merge_history.log",
         },
         "advanced": {
             "max_file_size_mb": 500,

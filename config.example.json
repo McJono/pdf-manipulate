@@ -56,7 +56,8 @@
     "level": "INFO",
     "log_file": "pdf-manipulate.log",
     "max_log_size_mb": 10,
-    "rotate_logs": true
+    "rotate_logs": true,
+    "merge_history_file": "merge_history.log"
   },
   "advanced": {
     "max_file_size_mb": 500,
