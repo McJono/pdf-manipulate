@@ -138,9 +138,9 @@ This document summarizes the work completed on the PDF Manipulate project.
 #### Testing & Validation
 - Unit tests for orientation detector
 - Demo scripts for testing:
-  - `demo_orientation.py` - Single PDF orientation detection
-  - `demo_batch_rotation.py` - Batch processing demo
-  - `demo_ui_autorotation.py` - UI demo
+  - `demos/demo_orientation.py` - Single PDF orientation detection
+  - `demos/demo_batch_rotation.py` - Batch processing demo
+  - `demos/demo_ui_autorotation.py` - UI demo
 - All existing tests still passing
 
 #### Features Implemented
@@ -201,7 +201,7 @@ This document summarizes the work completed on the PDF Manipulate project.
 
 #### Testing & Demo
 - 18 unit tests for preview module (test_preview.py)
-- Demo script (demo_merge_screen.py)
+- Demo script (demos/demo_merge_screen.py)
 - All tests passing (48 total)
 - No security vulnerabilities (CodeQL verified)
 

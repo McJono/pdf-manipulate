@@ -24,18 +24,39 @@ python3 main.py
 ```
 pdf-manipulate/
 ├── README.md                 # Project overview
+├── INSTALL.md                # Installation and setup guide
 ├── TODO.md                   # Development roadmap
 ├── main.py                   # Application entry point
 ├── requirements.txt          # Python dependencies
 ├── setup.py                  # Package configuration
 ├── pytest.ini               # Test configuration
+├── config.example.json      # Example configuration
 │
 ├── docs/                    # Documentation
+│   ├── BUILD_DEPLOY.md
+│   ├── CONTRIBUTING.md
 │   ├── DELIVERABLES.md
+│   ├── FAQ.md
 │   ├── GETTING_STARTED.md
+│   ├── IMPLEMENTATION_SUMMARY.md
 │   ├── NAMING_TEMPLATES.md
+│   ├── PHASE2_SUMMARY.md
+│   ├── PHASE3_SUMMARY.md
+│   ├── PHASE4_SUMMARY.md
+│   ├── PHASE5_ENHANCEMENTS.md
+│   ├── PHASE6_SUMMARY.md
+│   ├── PROJECT_STATUS.md
 │   ├── ROADMAP.md
+│   ├── TROUBLESHOOTING.md
 │   └── USER_STORIES.md
+│
+├── demos/                   # Demo scripts
+│   ├── demo_batch_rotation.py
+│   ├── demo_merge_screen.py
+│   ├── demo_naming_dialog.py
+│   ├── demo_orientation.py
+│   ├── demo_tooltips.py
+│   └── demo_ui_autorotation.py
 │
 ├── src/                     # Source code
 │   ├── config/              # Configuration management
@@ -44,17 +65,29 @@ pdf-manipulate/
 │   │   ├── parser.py
 │   │   └── variables.py
 │   ├── pdf_operations/      # PDF manipulation
+│   │   ├── batch_rotator.py
 │   │   ├── loader.py
 │   │   ├── merger.py
+│   │   ├── orientation_detector.py
+│   │   ├── preview.py
 │   │   └── rotation.py
 │   ├── ui/                  # User interface
-│   │   └── main_window.py
+│   │   ├── auto_rotation_screen.py
+│   │   ├── main_window.py
+│   │   ├── merge_screen.py
+│   │   ├── naming_dialog.py
+│   │   └── tooltip.py
 │   └── utils/               # Utilities
 │       ├── logger.py
 │       └── validators.py
 │
 └── tests/                   # Test suite
+    ├── test_integration.py
     ├── test_naming.py
+    ├── test_orientation_detector.py
+    ├── test_preferences.py
+    ├── test_preview.py
+    ├── test_undo_redo.py
     └── test_validators.py
 ```
 
@@ -78,12 +111,16 @@ pytest --cov=src --cov-report=html
 - Configuration management system (JSON-based)
 - Logging utility
 - Input validation and sanitization
+- Comprehensive test suite (56 tests)
 
 ### ✅ PDF Operations
 - PDF loader with metadata extraction
 - Rotation functionality (90°, 180°, 270°)
 - PDF merging with metadata preservation
 - Page-level operations
+- OCR-based auto-rotation with confidence scoring
+- Batch rotation processing
+- Preview generation with caching
 
 ### ✅ Naming Template System
 - Template parser with variable substitution
@@ -101,8 +138,13 @@ pytest --cov=src --cov-report=html
 ### ✅ User Interface
 - Tkinter-based GUI
 - Main window with menu system
-- File selection dialogs
-- Placeholder screens for features
+- Auto-rotation screen with manual override
+- Merge screen with preview functionality
+- Naming dialog with template selection
+- Tooltips throughout the interface
+- File selection and preview dialogs
+- Zoom controls for previews
+- Drag-free reordering controls
 
 ## Configuration
 
@@ -124,17 +166,38 @@ Example configuration:
 
 ## Development Status
 
-✅ **Phase 1 Complete**: Foundation
-- Project setup ✅
-- Core PDF operations ✅
-- Configuration system ✅
-- Naming template engine ✅
-- Basic UI framework ✅
+✅ **Completed Phases**:
+- Phase 1: Foundation ✅
+  - Project setup and structure
+  - Core PDF operations
+  - Configuration system
+  - Naming template engine
+  - Basic UI framework
+- Phase 2: Auto-Rotation ✅
+  - OCR integration with Tesseract
+  - Orientation detection engine
+  - Batch processing system
+  - Auto-rotation UI with manual override
+- Phase 3: Merge with Preview ✅
+  - Preview generation system
+  - File browser with metadata
+  - Merge queue with ordering controls
+  - Full-page preview dialogs
+- Phase 4: Naming Integration ✅
+  - Naming dialog component
+  - Template selection UI
+  - Merge workflow integration
+  - Merge history logging
+- Phase 5: UI Enhancements ✅
+  - Tooltip system
+  - Zoom controls
+  - Preferences system
+  - Undo/redo framework
 
-🚧 **Next Steps** (See TODO.md):
-- OCR integration for auto-rotation
-- Preview system implementation
-- Complete merge UI with drag-and-drop
+🚧 **Next Steps** (See [TODO.md](TODO.md) and [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md)):
+- Additional testing and polish
+- Performance optimizations
+- Deployment preparation
 - Batch processing
 - Testing and polish
 

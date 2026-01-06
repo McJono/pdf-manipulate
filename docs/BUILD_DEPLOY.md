@@ -174,19 +174,19 @@ Test specific features with demo scripts:
 
 ```bash
 # Test orientation detection
-python3 demo_orientation.py
+python3 demos/demo_orientation.py
 
 # Test batch rotation
-python3 demo_batch_rotation.py
+python3 demos/demo_batch_rotation.py
 
 # Test merge screen
-python3 demo_merge_screen.py
+python3 demos/demo_merge_screen.py
 
 # Test naming dialog
-python3 demo_naming_dialog.py
+python3 demos/demo_naming_dialog.py
 
 # Test UI auto-rotation
-python3 demo_ui_autorotation.py
+python3 demos/demo_ui_autorotation.py
 ```
 
 ---
