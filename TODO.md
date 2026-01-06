@@ -122,7 +122,7 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 - [x] Implement double-click to open full preview
 - [x] Create full-page preview modal/window
   - Navigation between pages
-  - [ ] Zoom in/out controls
+  - [x] Zoom in/out controls
   - Page counter
 - [x] Add caching for faster preview loading
 - [x] Handle large files efficiently (lazy loading)
@@ -233,7 +233,7 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 - [x] Preview modal for double-click
 - [x] Error/warning dialogs
 - [x] Progress dialog for long operations
-- [ ] About/help dialog
+- [x] About/help dialog
 
 ### 6.4 User Experience Enhancements
 - [ ] Add keyboard shortcuts throughout

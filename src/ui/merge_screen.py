@@ -86,6 +86,8 @@ class PreviewDialog(tk.Toplevel):
         self.current_page = page_number
         self.total_pages = 0
         self.preview_generator = PDFPreviewGenerator()
+        self.zoom_level = 1.0  # 1.0 = 100%, 0.5 = 50%, 2.0 = 200%
+        self.zoom_dpi = 150  # Base DPI for rendering
         
         # Get total pages
         try:
@@ -103,6 +105,37 @@ class PreviewDialog(tk.Toplevel):
     
     def _create_widgets(self):
         """Create dialog widgets."""
+        # Top toolbar frame
+        toolbar_frame = ttk.Frame(self)
+        toolbar_frame.pack(fill=tk.X, padx=5, pady=5)
+        
+        # Zoom controls (left side)
+        zoom_frame = ttk.Frame(toolbar_frame)
+        zoom_frame.pack(side=tk.LEFT)
+        
+        ttk.Button(
+            zoom_frame,
+            text="🔍-",
+            width=4,
+            command=self._zoom_out
+        ).pack(side=tk.LEFT, padx=2)
+        
+        self.zoom_label = ttk.Label(zoom_frame, text="100%", width=6)
+        self.zoom_label.pack(side=tk.LEFT, padx=2)
+        
+        ttk.Button(
+            zoom_frame,
+            text="🔍+",
+            width=4,
+            command=self._zoom_in
+        ).pack(side=tk.LEFT, padx=2)
+        
+        ttk.Button(
+            zoom_frame,
+            text="Reset",
+            command=self._zoom_reset
+        ).pack(side=tk.LEFT, padx=2)
+        
         # Navigation frame
         nav_frame = ttk.Frame(self)
         nav_frame.pack(fill=tk.X, padx=5, pady=5)
@@ -159,12 +192,15 @@ class PreviewDialog(tk.Toplevel):
             state=tk.NORMAL if self.current_page < self.total_pages - 1 else tk.DISABLED
         )
         
-        # Load preview image
+        # Load preview image with zoom applied
         try:
+            # Calculate DPI based on zoom level
+            dpi = int(self.zoom_dpi * self.zoom_level)
+            
             image = self.preview_generator.generate_preview(
                 self.pdf_path,
                 self.current_page,
-                dpi=150
+                dpi=dpi
             )
             
             if image:
@@ -206,6 +242,28 @@ class PreviewDialog(tk.Toplevel):
         if self.current_page < self.total_pages - 1:
             self.current_page += 1
             self._load_page()
+    
+    def _zoom_in(self):
+        """Zoom in (increase size by 25%)."""
+        if self.zoom_level < 3.0:  # Max 300%
+            self.zoom_level *= 1.25
+            self._update_zoom()
+    
+    def _zoom_out(self):
+        """Zoom out (decrease size by 25%)."""
+        if self.zoom_level > 0.25:  # Min 25%
+            self.zoom_level /= 1.25
+            self._update_zoom()
+    
+    def _zoom_reset(self):
+        """Reset zoom to 100%."""
+        self.zoom_level = 1.0
+        self._update_zoom()
+    
+    def _update_zoom(self):
+        """Update zoom label and reload page."""
+        self.zoom_label.config(text=f"{int(self.zoom_level * 100)}%")
+        self._load_page()
 
 
 class MergeScreen(ttk.Frame):
