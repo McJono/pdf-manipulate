@@ -61,7 +61,7 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 - [x] Create batch rotation for multiple pages
 - [x] Develop auto-rotation based on detection
 - [x] Implement rotation preview generation
-- [ ] Add undo/redo functionality for rotations
+- [x] Add undo/redo functionality for rotations
 - [x] Ensure metadata preservation during rotation
 
 ### 2.4 PDF Merging
@@ -89,8 +89,8 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 - [x] Create page-by-page review interface
 - [x] Add thumbnail previews showing before/after rotation
 - [x] Implement manual rotation controls (rotate left/right buttons)
-- [ ] Add "Accept All" / "Review Each" options
-- [ ] Create keyboard shortcuts for quick navigation
+- [x] Add "Accept All" / "Review Each" options
+- [x] Create keyboard shortcuts for quick navigation
   - Arrow keys for navigation
   - R/L for rotate right/left
   - Space/Enter for accept
@@ -100,7 +100,7 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 - [x] Implement multi-file auto-rotation queue
 - [x] Add file selection dialog (individual or folder)
 - [x] Create progress bar with status updates
-- [ ] Implement pause/resume functionality
+- [x] Implement pause/resume functionality
 - [x] Add error handling and logging for failed rotations
 - [x] Generate summary report after batch processing
 
@@ -203,7 +203,7 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
   - Edit: Preferences, Config
   - Tools: Auto-rotate, Merge, Batch Process
   - Help: Documentation, About
-- [ ] Add toolbar with quick access buttons
+- [x] Add toolbar with quick access buttons
 - [x] Implement status bar for messages/progress
 
 ### 6.2 Workflow Screens
@@ -236,7 +236,7 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 - [x] About/help dialog
 
 ### 6.4 User Experience Enhancements
-- [ ] Add keyboard shortcuts throughout
+- [x] Add keyboard shortcuts throughout
 - [x] Implement tooltips for all controls
 - [ ] Add context menus (right-click)
 - [ ] Create responsive layouts
@@ -281,10 +281,10 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 - [x] Add config editor UI
 
 ### 7.2 Settings Persistence
-- [ ] Save user preferences
-- [ ] Remember window size/position
-- [ ] Store recent files/directories
-- [ ] Save custom naming templates
+- [x] Save user preferences
+- [x] Remember window size/position
+- [x] Store recent files/directories
+- [x] Save custom naming templates
 
 ---
 

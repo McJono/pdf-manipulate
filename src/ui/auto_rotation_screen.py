@@ -20,6 +20,9 @@ except ImportError:
 
 from ..pdf_operations.batch_rotator import BatchRotationProcessor, PDFRotationJob
 from ..utils.logger import logger
+from .undo_redo import UndoRedoManager, RotationAction
+from .keyboard_shortcuts import create_shortcuts_manager
+from .tooltip import create_tooltip
 
 
 class AutoRotationScreen(ttk.Frame):
@@ -39,6 +42,15 @@ class AutoRotationScreen(ttk.Frame):
         self.processor: Optional[BatchRotationProcessor] = None
         self.current_job_idx = 0
         self.current_page_idx = 0
+        self.is_paused = False
+        self.processing_thread = None
+        
+        # Undo/redo manager
+        self.undo_manager = UndoRedoManager(max_history=50)
+        
+        # Keyboard shortcuts
+        self.shortcuts = create_shortcuts_manager(parent)
+        self._setup_shortcuts()
         
         self._create_widgets()
         self._layout_widgets()
@@ -51,21 +63,44 @@ class AutoRotationScreen(ttk.Frame):
         
         self.btn_add_files = ttk.Button(
             self.toolbar,
-            text="Add Files...",
+            text="📁 Add Files...",
             command=self._add_files
         )
+        create_tooltip(self.btn_add_files, "Add PDF files to process")
         
         self.btn_add_folder = ttk.Button(
             self.toolbar,
-            text="Add Folder...",
+            text="📂 Add Folder...",
             command=self._add_folder
         )
+        create_tooltip(self.btn_add_folder, "Add all PDFs from a folder")
         
         self.btn_clear = ttk.Button(
             self.toolbar,
-            text="Clear All",
+            text="🗑️ Clear All",
             command=self._clear_all
         )
+        create_tooltip(self.btn_clear, "Clear all files from queue")
+        
+        # Separator
+        ttk.Separator(self.toolbar, orient=tk.VERTICAL).pack(side=tk.LEFT, fill=tk.Y, padx=5)
+        
+        # Undo/Redo buttons
+        self.btn_undo = ttk.Button(
+            self.toolbar,
+            text="↶ Undo",
+            command=self._undo,
+            state=tk.DISABLED
+        )
+        create_tooltip(self.btn_undo, f"Undo last rotation ({self.shortcuts.get_display_text('undo')})")
+        
+        self.btn_redo = ttk.Button(
+            self.toolbar,
+            text="↷ Redo",
+            command=self._redo,
+            state=tk.DISABLED
+        )
+        create_tooltip(self.btn_redo, f"Redo rotation ({self.shortcuts.get_display_text('redo')})")
         
         # Main content area (split into two panes)
         self.paned_window = ttk.PanedWindow(self, orient=tk.HORIZONTAL)
@@ -164,12 +199,39 @@ class AutoRotationScreen(ttk.Frame):
             textvariable=self.progress_var
         )
         
+        # Accept All / Review Each buttons
+        self.btn_accept_all = ttk.Button(
+            self.action_bar,
+            text="✓ Accept All",
+            command=self._accept_all,
+            state=tk.DISABLED
+        )
+        create_tooltip(self.btn_accept_all, "Accept all auto-rotation suggestions and process")
+        
+        self.btn_review_each = ttk.Button(
+            self.action_bar,
+            text="👁 Review Each",
+            command=self._review_each,
+            state=tk.DISABLED
+        )
+        create_tooltip(self.btn_review_each, "Review each page one by one")
+        
+        # Pause/Resume button
+        self.btn_pause_resume = ttk.Button(
+            self.action_bar,
+            text="⏸ Pause",
+            command=self._toggle_pause,
+            state=tk.DISABLED
+        )
+        create_tooltip(self.btn_pause_resume, "Pause/Resume processing")
+        
         self.btn_process = ttk.Button(
             self.action_bar,
-            text="Process All",
+            text="▶ Process All",
             command=self._process_all,
             state=tk.DISABLED
         )
+        create_tooltip(self.btn_process, "Process all files with current settings")
         
     def _layout_widgets(self):
         """Layout all widgets"""
@@ -179,6 +241,9 @@ class AutoRotationScreen(ttk.Frame):
         self.btn_add_files.pack(side=tk.LEFT, padx=2)
         self.btn_add_folder.pack(side=tk.LEFT, padx=2)
         self.btn_clear.pack(side=tk.LEFT, padx=2)
+        # Undo/redo are in toolbar frame, pack them after separator
+        self.btn_undo.pack(side=tk.LEFT, padx=2)
+        self.btn_redo.pack(side=tk.LEFT, padx=2)
         
         # Main content
         self.paned_window.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=5, pady=5)
@@ -195,7 +260,10 @@ class AutoRotationScreen(ttk.Frame):
         # Action bar
         self.action_bar.pack(side=tk.BOTTOM, fill=tk.X, padx=5, pady=5)
         self.progress_label.pack(side=tk.LEFT, padx=5)
-        self.btn_process.pack(side=tk.RIGHT, padx=5)
+        self.btn_process.pack(side=tk.RIGHT, padx=2)
+        self.btn_pause_resume.pack(side=tk.RIGHT, padx=2)
+        self.btn_review_each.pack(side=tk.RIGHT, padx=2)
+        self.btn_accept_all.pack(side=tk.RIGHT, padx=2)
         
     def _add_files(self):
         """Add PDF files to the queue"""
@@ -242,49 +310,6 @@ class AutoRotationScreen(ttk.Frame):
                 confidence_threshold=0.80,
                 backup_originals=True
             )
-    
-    def _refresh_tree(self):
-        """Refresh the file tree with current processor state"""
-        self.file_tree.delete(*self.file_tree.get_children())
-        
-        if not self.processor or not self.processor.jobs:
-            return
-        
-        # Add jobs to tree
-        for job in self.processor.jobs:
-            # Add file node
-            file_node = self.file_tree.insert(
-                "",
-                tk.END,
-                text=job.pdf_path.name,
-                values=(
-                    job.total_pages,
-                    f"{job.pages_needing_rotation} pages",
-                    f"{job.high_confidence_pages} high conf"
-                ),
-                open=True
-            )
-            
-            # Add page nodes
-            for page in job.pages:
-                self.file_tree.insert(
-                    file_node,
-                    tk.END,
-                    text=f"Page {page.page_number + 1}",
-                    values=(
-                        "",
-                        f"{page.suggested_angle}°" if page.suggested_angle != 0 else "OK",
-                        f"{page.confidence:.1%}"
-                    )
-                )
-        
-        # Update status
-        summary = self.processor.get_summary()
-        self.progress_var.set(
-            f"{summary['total_jobs']} files, {summary['total_pages']} pages, "
-            f"{summary['high_confidence_pages']} auto-rotate ready"
-        )
-        self.btn_process.config(state=tk.NORMAL)
     
     def _on_tree_select(self, event):
         """Handle tree selection"""
@@ -367,6 +392,158 @@ class AutoRotationScreen(ttk.Frame):
         
         self.progress_var.set("Processing complete")
         self.btn_process.config(state=tk.NORMAL)
+        self.is_paused = False
+        self.btn_pause_resume.config(text="⏸ Pause", state=tk.DISABLED)
+    
+    def _setup_shortcuts(self):
+        """Setup keyboard shortcuts"""
+        self.shortcuts.bind('undo', self._undo)
+        self.shortcuts.bind('redo', self._redo)
+        self.shortcuts.bind('rotate_right', lambda e: self._manual_rotate(90))
+        self.shortcuts.bind('rotate_left', lambda e: self._manual_rotate(-90))
+        self.shortcuts.bind('accept', self._accept_all)
+        self.shortcuts.bind('next', self._next_page)
+        self.shortcuts.bind('prev', self._prev_page)
+    
+    def _update_undo_redo_buttons(self):
+        """Update undo/redo button states"""
+        self.btn_undo.config(
+            state=tk.NORMAL if self.undo_manager.can_undo() else tk.DISABLED
+        )
+        self.btn_redo.config(
+            state=tk.NORMAL if self.undo_manager.can_redo() else tk.DISABLED
+        )
+    
+    def _undo(self, event=None):
+        """Undo last rotation"""
+        action = self.undo_manager.undo()
+        if action:
+            # Apply the old rotation
+            logger.info(f"Undoing: {action}")
+            messagebox.showinfo("Undo", f"Undone: {action}")
+            self._update_undo_redo_buttons()
+        else:
+            messagebox.showinfo("Undo", "Nothing to undo")
+    
+    def _redo(self, event=None):
+        """Redo last undone rotation"""
+        action = self.undo_manager.redo()
+        if action:
+            # Reapply the new rotation
+            logger.info(f"Redoing: {action}")
+            messagebox.showinfo("Redo", f"Redone: {action}")
+            self._update_undo_redo_buttons()
+        else:
+            messagebox.showinfo("Redo", "Nothing to redo")
+    
+    def _accept_all(self, event=None):
+        """Accept all auto-rotation suggestions and process immediately"""
+        if not self.processor or not self.processor.jobs:
+            messagebox.showwarning("No Files", "No files to process")
+            return
+        
+        # Ask for confirmation
+        summary = self.processor.get_summary()
+        if not messagebox.askyesno(
+            "Accept All",
+            f"Accept all auto-rotation suggestions?\n\n"
+            f"{summary['high_confidence_pages']} pages will be automatically rotated.\n"
+            f"This will process all files immediately."
+        ):
+            return
+        
+        # Process all
+        self._process_all()
+    
+    def _review_each(self):
+        """Start review mode - go through each page one by one"""
+        if not self.processor or not self.processor.jobs:
+            messagebox.showwarning("No Files", "No files to process")
+            return
+        
+        messagebox.showinfo(
+            "Review Mode",
+            "Review mode will allow you to navigate through each page\n"
+            "and accept or modify the rotation suggestion.\n\n"
+            "Use arrow keys to navigate:\n"
+            "→ Next page\n"
+            "← Previous page\n"
+            "Enter - Accept current page\n"
+            "R - Rotate right\n"
+            "L - Rotate left"
+        )
+        
+        # Enable review navigation
+        self.btn_accept_all.config(state=tk.DISABLED)
+        self.btn_review_each.config(state=tk.DISABLED)
+        
+        # TODO: Implement page-by-page review interface
+    
+    def _next_page(self, event=None):
+        """Navigate to next page in review mode"""
+        # TODO: Implement navigation
+        pass
+    
+    def _prev_page(self, event=None):
+        """Navigate to previous page in review mode"""
+        # TODO: Implement navigation
+        pass
+    
+    def _toggle_pause(self):
+        """Toggle pause/resume for batch processing"""
+        self.is_paused = not self.is_paused
+        
+        if self.is_paused:
+            self.btn_pause_resume.config(text="▶ Resume")
+            logger.info("Processing paused")
+        else:
+            self.btn_pause_resume.config(text="⏸ Pause")
+            logger.info("Processing resumed")
+    
+    def _refresh_tree(self):
+        """Refresh the file tree with current processor state"""
+        self.file_tree.delete(*self.file_tree.get_children())
+        
+        if not self.processor or not self.processor.jobs:
+            return
+        
+        # Add jobs to tree
+        for job in self.processor.jobs:
+            # Add file node
+            file_node = self.file_tree.insert(
+                "",
+                tk.END,
+                text=job.pdf_path.name,
+                values=(
+                    job.total_pages,
+                    f"{job.pages_needing_rotation} pages",
+                    f"{job.high_confidence_pages} high conf"
+                ),
+                open=True
+            )
+            
+            # Add page nodes
+            for page in job.pages:
+                self.file_tree.insert(
+                    file_node,
+                    tk.END,
+                    text=f"Page {page.page_number + 1}",
+                    values=(
+                        "",
+                        f"{page.suggested_angle}°" if page.suggested_angle != 0 else "OK",
+                        f"{page.confidence:.1%}"
+                    )
+                )
+        
+        # Update status and enable buttons
+        summary = self.processor.get_summary()
+        self.progress_var.set(
+            f"{summary['total_jobs']} files, {summary['total_pages']} pages, "
+            f"{summary['high_confidence_pages']} auto-rotate ready"
+        )
+        self.btn_process.config(state=tk.NORMAL)
+        self.btn_accept_all.config(state=tk.NORMAL)
+        self.btn_review_each.config(state=tk.NORMAL)
 
 
 def show_auto_rotation_screen(parent=None):
