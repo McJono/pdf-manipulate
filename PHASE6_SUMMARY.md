@@ -181,7 +181,7 @@ python3 format.py
 
 ## Files Created/Modified
 
-### New Files (5)
+### New Files (8)
 - `tests/test_integration.py` (350 lines) - Integration test suite
 - `src/ui/settings_dialog.py` (650 lines) - Settings dialog
 - `docs/FAQ.md` (400 lines) - User FAQ
@@ -189,8 +189,9 @@ python3 format.py
 - `CONTRIBUTING.md` (500 lines) - Contribution guidelines
 - `lint.py` (90 lines) - Linting script
 - `format.py` (40 lines) - Formatting script
+- `PHASE6_SUMMARY.md` (250 lines) - This summary document
 
-### Modified Files (2)
+### Modified Files (3)
 - `src/ui/main_window.py` (+15 lines) - Added Edit menu and settings handler
 - `TODO.md` (updated) - Marked 9 items as complete
 - `PROJECT_STATUS.md` (updated) - Added Phase 5 & 6 summaries

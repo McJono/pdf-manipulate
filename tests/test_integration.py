@@ -36,7 +36,6 @@ def sample_pdf_path(temp_dir):
     """Create a simple test PDF file"""
     try:
         from PyPDF2 import PdfWriter
-        from PyPDF2.generic import RectangleObject
         
         pdf_path = os.path.join(temp_dir, "test_sample.pdf")
         writer = PdfWriter()
