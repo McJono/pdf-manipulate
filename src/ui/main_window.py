@@ -174,17 +174,99 @@ class MainWindow:
 
     def _show_about(self) -> None:
         """Show about dialog"""
-        messagebox.showinfo(
-            "About PDF Manipulate",
-            "PDF Manipulate v0.1.0\n\n"
-            "An intelligent PDF manipulation program\n"
-            "that automates document processing.\n\n"
-            "Features:\n"
-            "• Auto-Rotation\n"
-            "• Interactive Merging\n"
-            "• Smart Naming\n\n"
-            "© 2024 McJono"
+        about_window = tk.Toplevel(self.root)
+        about_window.title("About PDF Manipulate")
+        about_window.geometry("450x400")
+        about_window.resizable(False, False)
+        
+        # Center the window
+        about_window.transient(self.root)
+        about_window.grab_set()
+        
+        # Main frame
+        main_frame = ttk.Frame(about_window, padding=20)
+        main_frame.pack(fill=tk.BOTH, expand=True)
+        
+        # Title
+        title = ttk.Label(
+            main_frame,
+            text="PDF Manipulate",
+            font=("Arial", 20, "bold")
         )
+        title.pack(pady=(0, 5))
+        
+        # Version
+        version = ttk.Label(
+            main_frame,
+            text="Version 1.0.0",
+            font=("Arial", 10)
+        )
+        version.pack(pady=(0, 20))
+        
+        # Description
+        description = tk.Text(
+            main_frame,
+            height=8,
+            width=50,
+            wrap=tk.WORD,
+            relief=tk.FLAT,
+            background=about_window.cget('bg')
+        )
+        description.pack(pady=(0, 20))
+        
+        description_text = """An intelligent PDF manipulation program that automates document processing with features for auto-rotation, merging, and smart file naming.
+
+Features:
+• Auto-Rotation - Detect and rotate incorrectly oriented pages
+• Interactive Merging - Select and merge PDFs with live previews
+• Smart Naming - Template-based file naming with date arithmetic
+• Cross-Platform - Works on Windows, macOS, and Linux"""
+        
+        description.insert("1.0", description_text)
+        description.config(state=tk.DISABLED)
+        
+        # Copyright
+        copyright_label = ttk.Label(
+            main_frame,
+            text="© 2024-2026 McJono",
+            font=("Arial", 9)
+        )
+        copyright_label.pack(pady=(0, 10))
+        
+        # GitHub link
+        github_frame = ttk.Frame(main_frame)
+        github_frame.pack(pady=(0, 20))
+        
+        ttk.Label(
+            github_frame,
+            text="GitHub:",
+            font=("Arial", 9)
+        ).pack(side=tk.LEFT, padx=(0, 5))
+        
+        github_label = ttk.Label(
+            github_frame,
+            text="github.com/McJono/pdf-manipulate",
+            font=("Arial", 9),
+            foreground="blue",
+            cursor="hand2"
+        )
+        github_label.pack(side=tk.LEFT)
+        
+        # Make GitHub link clickable (visual only)
+        def on_github_click(event):
+            messagebox.showinfo(
+                "GitHub",
+                "Visit: https://github.com/McJono/pdf-manipulate"
+            )
+        github_label.bind("<Button-1>", on_github_click)
+        
+        # Close button
+        ttk.Button(
+            main_frame,
+            text="Close",
+            command=about_window.destroy,
+            width=15
+        ).pack()
 
     def run(self) -> None:
         """Start the application main loop"""

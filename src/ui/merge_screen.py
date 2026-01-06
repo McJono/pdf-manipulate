@@ -23,6 +23,7 @@ except ImportError:
     DEPENDENCIES_AVAILABLE = False
 
 from .naming_dialog import show_naming_dialog
+from .tooltip import create_tooltip
 from ..config.manager import config
 from ..utils.validators import ensure_extension
 
@@ -71,6 +72,11 @@ class PDFFileInfo:
 class PreviewDialog(tk.Toplevel):
     """Full-page preview dialog."""
     
+    # Zoom constants
+    MIN_ZOOM_LEVEL = 0.25  # 25%
+    MAX_ZOOM_LEVEL = 3.0   # 300%
+    ZOOM_STEP = 1.25       # 25% increment
+    
     def __init__(self, parent, pdf_path: str, page_number: int = 0):
         """
         Initialize preview dialog.
@@ -86,6 +92,8 @@ class PreviewDialog(tk.Toplevel):
         self.current_page = page_number
         self.total_pages = 0
         self.preview_generator = PDFPreviewGenerator()
+        self.zoom_level = 1.0  # 1.0 = 100%, 0.5 = 50%, 2.0 = 200%
+        self.zoom_dpi = 150  # Base DPI for rendering
         
         # Get total pages
         try:
@@ -103,6 +111,43 @@ class PreviewDialog(tk.Toplevel):
     
     def _create_widgets(self):
         """Create dialog widgets."""
+        # Top toolbar frame
+        toolbar_frame = ttk.Frame(self)
+        toolbar_frame.pack(fill=tk.X, padx=5, pady=5)
+        
+        # Zoom controls (left side)
+        zoom_frame = ttk.Frame(toolbar_frame)
+        zoom_frame.pack(side=tk.LEFT)
+        
+        zoom_out_btn = ttk.Button(
+            zoom_frame,
+            text="🔍-",
+            width=4,
+            command=self._zoom_out
+        )
+        zoom_out_btn.pack(side=tk.LEFT, padx=2)
+        create_tooltip(zoom_out_btn, "Zoom out")
+        
+        self.zoom_label = ttk.Label(zoom_frame, text="100%", width=6)
+        self.zoom_label.pack(side=tk.LEFT, padx=2)
+        
+        zoom_in_btn = ttk.Button(
+            zoom_frame,
+            text="🔍+",
+            width=4,
+            command=self._zoom_in
+        )
+        zoom_in_btn.pack(side=tk.LEFT, padx=2)
+        create_tooltip(zoom_in_btn, "Zoom in")
+        
+        reset_btn = ttk.Button(
+            zoom_frame,
+            text="Reset",
+            command=self._zoom_reset
+        )
+        reset_btn.pack(side=tk.LEFT, padx=2)
+        create_tooltip(reset_btn, "Reset zoom to 100%")
+        
         # Navigation frame
         nav_frame = ttk.Frame(self)
         nav_frame.pack(fill=tk.X, padx=5, pady=5)
@@ -159,12 +204,15 @@ class PreviewDialog(tk.Toplevel):
             state=tk.NORMAL if self.current_page < self.total_pages - 1 else tk.DISABLED
         )
         
-        # Load preview image
+        # Load preview image with zoom applied
         try:
+            # Calculate DPI based on zoom level
+            dpi = int(self.zoom_dpi * self.zoom_level)
+            
             image = self.preview_generator.generate_preview(
                 self.pdf_path,
                 self.current_page,
-                dpi=150
+                dpi=dpi
             )
             
             if image:
@@ -206,6 +254,28 @@ class PreviewDialog(tk.Toplevel):
         if self.current_page < self.total_pages - 1:
             self.current_page += 1
             self._load_page()
+    
+    def _zoom_in(self):
+        """Zoom in (increase size by 25%)."""
+        if self.zoom_level < self.MAX_ZOOM_LEVEL:
+            self.zoom_level *= self.ZOOM_STEP
+            self._update_zoom()
+    
+    def _zoom_out(self):
+        """Zoom out (decrease size by 25%)."""
+        if self.zoom_level > self.MIN_ZOOM_LEVEL:
+            self.zoom_level /= self.ZOOM_STEP
+            self._update_zoom()
+    
+    def _zoom_reset(self):
+        """Reset zoom to 100%."""
+        self.zoom_level = 1.0
+        self._update_zoom()
+    
+    def _update_zoom(self):
+        """Update zoom label and reload page."""
+        self.zoom_label.config(text=f"{int(self.zoom_level * 100)}%")
+        self._load_page()
 
 
 class MergeScreen(ttk.Frame):
@@ -271,23 +341,29 @@ class MergeScreen(ttk.Frame):
         toolbar = ttk.Frame(frame)
         toolbar.pack(fill=tk.X, padx=5, pady=5)
         
-        ttk.Button(
+        open_folder_btn = ttk.Button(
             toolbar,
             text="Open Folder",
             command=self._open_folder
-        ).pack(side=tk.LEFT, padx=2)
+        )
+        open_folder_btn.pack(side=tk.LEFT, padx=2)
+        create_tooltip(open_folder_btn, "Open a folder and display all PDF files")
         
-        ttk.Button(
+        add_files_btn = ttk.Button(
             toolbar,
             text="Add Files",
             command=self._add_files
-        ).pack(side=tk.LEFT, padx=2)
+        )
+        add_files_btn.pack(side=tk.LEFT, padx=2)
+        create_tooltip(add_files_btn, "Select individual PDF files to add")
         
-        ttk.Button(
+        refresh_btn = ttk.Button(
             toolbar,
             text="Refresh",
             command=self._refresh_file_list
-        ).pack(side=tk.LEFT, padx=2)
+        )
+        refresh_btn.pack(side=tk.LEFT, padx=2)
+        create_tooltip(refresh_btn, "Refresh the file list")
         
         # File list with thumbnails
         list_frame = ttk.Frame(frame)
@@ -352,29 +428,37 @@ class MergeScreen(ttk.Frame):
         button_frame = ttk.Frame(frame)
         button_frame.pack(fill=tk.X, padx=5, pady=5)
         
-        ttk.Button(
+        move_up_btn = ttk.Button(
             button_frame,
             text="↑ Move Up",
             command=self._move_up_in_queue
-        ).pack(fill=tk.X, pady=2)
+        )
+        move_up_btn.pack(fill=tk.X, pady=2)
+        create_tooltip(move_up_btn, "Move selected file up in merge order")
         
-        ttk.Button(
+        move_down_btn = ttk.Button(
             button_frame,
             text="↓ Move Down",
             command=self._move_down_in_queue
-        ).pack(fill=tk.X, pady=2)
+        )
+        move_down_btn.pack(fill=tk.X, pady=2)
+        create_tooltip(move_down_btn, "Move selected file down in merge order")
         
-        ttk.Button(
+        remove_btn = ttk.Button(
             button_frame,
             text="✕ Remove",
             command=self._remove_from_queue
-        ).pack(fill=tk.X, pady=2)
+        )
+        remove_btn.pack(fill=tk.X, pady=2)
+        create_tooltip(remove_btn, "Remove selected file from merge queue")
         
-        ttk.Button(
+        clear_btn = ttk.Button(
             button_frame,
             text="Clear All",
             command=self._clear_queue
-        ).pack(fill=tk.X, pady=2)
+        )
+        clear_btn.pack(fill=tk.X, pady=2)
+        create_tooltip(clear_btn, "Clear all files from merge queue")
         
         ttk.Separator(button_frame).pack(fill=tk.X, pady=5)
         
@@ -385,6 +469,10 @@ class MergeScreen(ttk.Frame):
             state=tk.DISABLED
         )
         self.merge_button.pack(fill=tk.X, pady=2)
+        create_tooltip(
+            self.merge_button, 
+            "Merge all files in the queue into a single PDF\n(Select at least 2 files to enable)"
+        )
         
         return frame
     
@@ -421,6 +509,10 @@ class MergeScreen(ttk.Frame):
             state=tk.DISABLED
         )
         self.full_preview_button.pack(pady=5)
+        create_tooltip(
+            self.full_preview_button, 
+            "Open full-size preview with zoom and navigation\n(Double-click file for quick access)"
+        )
         
         self.current_preview_file = None
         
