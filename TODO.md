@@ -3,6 +3,22 @@
 ## Project Overview
 Build a comprehensive PDF manipulation program that automates PDF rotation, provides merging capabilities with preview, and supports intelligent file naming based on configurable templates.
 
+## Recent Updates (2026-01-06)
+
+✅ **Repository Organization Complete**
+- All documentation (except README.md, INSTALL.md, TODO.md) moved to `docs/` folder
+- All demo scripts moved to `demos/` folder
+- All tests confirmed in `tests/` folder
+- Updated all documentation references to reflect new structure
+- Updated README.md, INSTALL.md with current project status
+
+**New Structure:**
+- Root: `README.md`, `INSTALL.md`, `TODO.md` (quick reference files)
+- `docs/`: All project documentation and phase summaries
+- `demos/`: All demonstration scripts
+- `tests/`: All test files
+- `src/`: All source code
+
 ---
 
 ## 1. Project Setup & Infrastructure
@@ -21,9 +37,10 @@ Build a comprehensive PDF manipulation program that automates PDF rotation, prov
 - [x] Create main project directories:
   - `/src` - Source code
   - `/tests` - Unit and integration tests
-  - `/config` - Configuration files
   - `/docs` - Documentation
-  - `/assets` - Icons, images, resources
+  - `/demos` - Demo scripts
+  - `/config` - Configuration files
+  - `/assets` - Icons, images, resources (future)
 - [x] Set up configuration management system
 - [x] Create logging infrastructure
 - [x] Set up error handling framework
