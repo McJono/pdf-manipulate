@@ -88,7 +88,7 @@ A comprehensive three-panel interface for PDF merging:
    - Cache testing
    - Preview generation tests
 
-4. **demo_merge_screen.py** (60 lines)
+4. **demos/demo_merge_screen.py** (60 lines)
    - Standalone demo script
    - Usage examples
    - Dependency checking

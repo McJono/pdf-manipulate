@@ -76,24 +76,47 @@ See [TODO.md](TODO.md) for the comprehensive development roadmap and implementat
 
 ## Documentation
 
+### Quick Reference
+- [INSTALL.md](INSTALL.md) - Installation and setup guide
 - [TODO.md](TODO.md) - Complete development roadmap and task breakdown
+
+### Detailed Documentation
+- [PROJECT_STATUS.md](docs/PROJECT_STATUS.md) - Current project status and completed features
 - [ROADMAP.md](docs/ROADMAP.md) - Development timeline and milestones
 - [USER_STORIES.md](docs/USER_STORIES.md) - User personas and feature requirements
 - [NAMING_TEMPLATES.md](docs/NAMING_TEMPLATES.md) - Naming template system reference
 - [GETTING_STARTED.md](docs/GETTING_STARTED.md) - Developer onboarding guide
-- [DELIVERABLES.md](docs/DELIVERABLES.md) - Project deliverables summary
+- [CONTRIBUTING.md](docs/CONTRIBUTING.md) - Contribution guidelines
+- [FAQ.md](docs/FAQ.md) - Frequently asked questions
+- [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) - Common issues and solutions
 
-## Technology Stack (Planned)
+### Demo Scripts
+Demo scripts are available in the `demos/` folder:
+- `demos/demo_orientation.py` - Test orientation detection
+- `demos/demo_batch_rotation.py` - Batch rotation processing
+- `demos/demo_merge_screen.py` - File merging with preview
+- `demos/demo_naming_dialog.py` - Template-based naming
+- `demos/demo_ui_autorotation.py` - Auto-rotation UI
+- `demos/demo_tooltips.py` - Tooltip functionality
+
+## Technology Stack
 
 - **Language**: Python 3.8+
 - **PDF Processing**: PyPDF2, PyMuPDF (fitz)
 - **OCR**: Tesseract, pytesseract
-- **GUI**: Tkinter/PyQt6
+- **GUI**: Tkinter
 - **Image Processing**: Pillow, pdf2image
 
 ## Development Status
 
-🚧 **In Planning Phase** - See [TODO.md](TODO.md) for detailed implementation plan
+✅ **Core Features Complete** - The application is functional with all major features implemented:
+- ✅ Auto-rotation with OCR detection
+- ✅ PDF merging with preview
+- ✅ Template-based naming system
+- ✅ Batch processing
+- ✅ Comprehensive UI
+
+See [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) for detailed progress and [TODO.md](TODO.md) for remaining tasks.
 
 ## License
 
@@ -101,7 +124,7 @@ TBD
 
 ## Contributing
 
-Contributions welcome! See TODO.md for areas where help is needed.
+Contributions welcome! See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for contribution guidelines and [TODO.md](TODO.md) for areas where help is needed.
 
 ## Support
 

@@ -200,7 +200,7 @@ Source Files (3):
 
 ### New Files
 - `src/ui/naming_dialog.py` (264 lines)
-- `demo_naming_dialog.py` (74 lines)
+- `demos/demo_naming_dialog.py` (74 lines)
 
 ### Modified Files
 - `src/ui/merge_screen.py` (+67 lines)
@@ -259,7 +259,7 @@ Source Files (3):
 
 ### Running the Demo
 ```bash
-python3 demo_naming_dialog.py
+python3 demos/demo_naming_dialog.py
 ```
 
 ### Running Tests

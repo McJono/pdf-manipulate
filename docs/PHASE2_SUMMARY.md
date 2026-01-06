@@ -53,9 +53,9 @@ Successfully completed **Phase 2: Auto-Rotation (Weeks 3-4)** of the PDF Manipul
 - All tests passing (30 total across project)
 
 **Demo Scripts:**
-1. `demo_orientation.py` - Tests single PDF orientation detection
-2. `demo_batch_rotation.py` - Demonstrates batch processing
-3. `demo_ui_autorotation.py` - Launches the GUI
+1. `demos/demo_orientation.py` - Tests single PDF orientation detection
+2. `demos/demo_batch_rotation.py` - Demonstrates batch processing
+3. `demos/demo_ui_autorotation.py` - Launches the GUI
 
 ## Technical Highlights
 
@@ -116,9 +116,9 @@ show_auto_rotation_screen()  # Launches GUI
 - `src/pdf_operations/batch_rotator.py` (393 lines)
 - `src/ui/auto_rotation_screen.py` (441 lines)
 - `tests/test_orientation_detector.py` (124 lines)
-- `demo_orientation.py` (134 lines)
-- `demo_batch_rotation.py` (155 lines)
-- `demo_ui_autorotation.py` (21 lines)
+- `demos/demo_orientation.py` (134 lines)
+- `demos/demo_batch_rotation.py` (155 lines)
+- `demos/demo_ui_autorotation.py` (21 lines)
 - `PHASE2_SUMMARY.md` (this file)
 
 ### Modified Files (2)

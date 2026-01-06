@@ -92,7 +92,7 @@ create_tooltip(button, "Merge all files in the queue into a single PDF")
 ### 4. Demo Scripts
 
 **Created:**
-- `demo_tooltips.py` - Interactive demonstration of tooltip functionality
+- `demos/demo_tooltips.py` - Interactive demonstration of tooltip functionality
 
 **Features:**
 - Showcases tooltip widget on various UI elements
@@ -105,7 +105,7 @@ create_tooltip(button, "Merge all files in the queue into a single PDF")
 
 ### New Files
 - `src/ui/tooltip.py` (106 lines) - Tooltip widget implementation
-- `demo_tooltips.py` (94 lines) - Tooltip demonstration script
+- `demos/demo_tooltips.py` (94 lines) - Tooltip demonstration script
 
 ### Modified Files
 - `src/ui/merge_screen.py` (+68 lines)
