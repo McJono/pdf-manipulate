@@ -8,8 +8,8 @@ This script demonstrates the file selection, preview, and merge functionality.
 import sys
 import os
 
-# Add src to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+# Add parent directory to path so we can import src
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from src.ui.merge_screen import show_merge_screen
 

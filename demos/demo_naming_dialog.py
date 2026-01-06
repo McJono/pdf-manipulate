@@ -8,8 +8,8 @@ from tkinter import messagebox
 import sys
 import os
 
-# Add src to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+# Add parent directory to path so we can import src
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from src.ui.naming_dialog import show_naming_dialog
 
